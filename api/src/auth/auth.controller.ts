@@ -8,6 +8,7 @@ import {
   Session,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 // Services
 import { AuthService } from './auth.service';
@@ -16,7 +17,9 @@ import { AuthService } from './auth.service';
 import { SignupDTO } from '../user/dto/createUser.dto';
 import { ConfirmAccountDTO } from './dto/confirm-account-dto';
 import { LoginDTO } from './dto/login-dto';
-import { AuthGuard } from '@nestjs/passport';
+
+// Guards
+import { JwtAuthGuard } from '../jwt/jwt-auth-guard';
 
 @Controller('auth')
 export class AuthController {
@@ -87,5 +90,12 @@ export class AuthController {
         `${process.env.GOOGLE_CLIENT_REDIRECT_URL}/auth/login/?error=true`,
       );
     }
+  }
+
+  // Logout
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  async logout(@Req() req: any, @Session() session: Record<string, any>) {
+    return await this.authService.logout(req, session);
   }
 }

@@ -34,7 +34,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       if (blackListedToken) {
         throw new UnauthorizedException({
           statusCode: 401,
-          message: 'Token is invalid or expired',
+          error: 'Token is invalid or expired',
         });
       }
     }

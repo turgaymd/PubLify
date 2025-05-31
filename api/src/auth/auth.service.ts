@@ -14,17 +14,18 @@ import { v4 as uuid } from 'uuid';
 
 // Services
 import { UserService } from '../user/user.service';
+import { SupabaseService } from '../supabase/supabase.service';
 
 // Payload
 import { JwtPayload } from '../jwt/jwt-payload';
 
-// DTOs and Utils
+// DTOs & Utils & Enums
 import { SignupDTO } from '../user/dto/createUser.dto';
 import { generate_confirm_code } from './utils/generate-codes';
 import { ConfirmAccountDTO } from './dto/confirm-account-dto';
 import { signup_confirm_message } from './utils/messages/signup-confirm';
 import { LoginDTO } from './dto/login-dto';
-import { Provider } from 'src/enums/provider.enum';
+import { Provider } from '../enums/provider.enum';
 
 @Injectable()
 export class AuthService {
@@ -34,6 +35,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly mailService: MailerService,
     private readonly configService: ConfigService,
+    private readonly supabase: SupabaseService,
   ) {}
 
   async signup(
@@ -301,5 +303,40 @@ export class AuthService {
       return `${split_name.split('.')[0]}_${uuid().slice(0, 5)}`;
     }
     return `${split_name}_${uuid().slice(0, 5)}`;
+  }
+
+  // Logout
+  async logout(req: any, session: Record<string, any>) {
+    try {
+      const token = req.headers.authorization?.split(' ')[1];
+
+      if (!token) {
+        throw new NotFoundException({
+          statusCode: 404,
+        });
+      }
+
+      await this.supabase
+        .getClient()
+        .from('token_black_list')
+        .insert({ token });
+
+      await session.destroy();
+
+      return { statusCode: 200 };
+    } catch (err) {
+      if (
+        err instanceof ConflictException ||
+        err instanceof InternalServerErrorException ||
+        err instanceof NotFoundException ||
+        err instanceof BadRequestException
+      ) {
+        throw err;
+      }
+      this.logger.error(`Unknown error (logout): ${err}`);
+      throw new InternalServerErrorException(
+        'Internal server error when logging out.',
+      );
+    }
   }
 }
