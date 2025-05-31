@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
@@ -9,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
+import { v4 as uuid } from 'uuid';
 
 // Services
 import { UserService } from '../user/user.service';
@@ -22,6 +24,7 @@ import { generate_confirm_code } from './utils/generate-codes';
 import { ConfirmAccountDTO } from './dto/confirm-account-dto';
 import { signup_confirm_message } from './utils/messages/signup-confirm';
 import { LoginDTO } from './dto/login-dto';
+import { Provider } from 'src/enums/provider.enum';
 
 @Injectable()
 export class AuthService {
@@ -168,7 +171,9 @@ export class AuthService {
   }
 
   // Login
-  async login(loginDto: LoginDTO): Promise<{ statusCode: number; accessToken: string }> {
+  async login(
+    loginDto: LoginDTO,
+  ): Promise<{ statusCode: number; accessToken: string }> {
     const { username_or_email, password } = loginDto;
 
     try {
@@ -221,7 +226,7 @@ export class AuthService {
     } catch (err) {
       if (
         err instanceof ConflictException ||
-        err instanceof InternalServerErrorException || 
+        err instanceof InternalServerErrorException ||
         err instanceof NotFoundException
       ) {
         throw err;
@@ -231,5 +236,70 @@ export class AuthService {
         'Internal server error when logging in.',
       );
     }
+  }
+
+  // OAuth
+  async validateGoogleUser(user: {
+    email: string;
+    full_name: string;
+    accessToken: string;
+  }): Promise<{
+    statusCode: number;
+    accessToken?: string;
+    providerError?: boolean;
+    banError?: boolean;
+  }> {
+    try {
+      let existUser = await this.userService.getUserByEmail(user.email);
+
+      if (!existUser) {
+        const newUser = await this.userService.createUser({
+          full_name: user.full_name,
+          username: this.generateUsername(user.full_name),
+          email: user.email,
+          password: 'signed_up_with_google',
+          provider: Provider.GOOGLE,
+        });
+
+        existUser = newUser;
+      }
+
+      if (existUser.provider === Provider.NORMAL) {
+        return {
+          statusCode: 400,
+          providerError: true,
+        };
+      }
+
+      if (existUser.is_banned) {
+        return {
+          statusCode: 401,
+          banError: true,
+        };
+      }
+
+      return { statusCode: 200, accessToken: user.accessToken };
+    } catch (err) {
+      if (
+        err instanceof ConflictException ||
+        err instanceof InternalServerErrorException ||
+        err instanceof NotFoundException ||
+        err instanceof BadRequestException
+      ) {
+        throw err;
+      }
+      this.logger.error(`Unknown error (OAuth login): ${err}`);
+      throw new InternalServerErrorException(
+        'Internal server error when logging in.',
+      );
+    }
+  }
+
+  private generateUsername(full_name: string): string {
+    const split_name = full_name.toLowerCase().replaceAll(' ', '_');
+    if (split_name.includes('.')) {
+      return `${split_name.split('.')[0]}_${uuid().slice(0, 5)}`;
+    }
+    return `${split_name}_${uuid().slice(0, 5)}`;
   }
 }

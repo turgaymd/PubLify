@@ -1,3 +1,5 @@
+import { Provider } from '../enums/provider.enum';
+
 export interface IUser {
   id: string;
   full_name: string;
@@ -5,6 +7,7 @@ export interface IUser {
   email: string;
   is_banned: boolean;
   is_admin: boolean;
+  provider: Provider;
   password: string;
   created_at: Date;
 }
@@ -14,4 +17,5 @@ export interface INewUser {
   username: string;
   email: string;
   password: string;
+  provider?: Provider;
 }

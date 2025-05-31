@@ -92,6 +92,7 @@ export class UserService {
           username: newUser.username,
           email: newUser.email,
           password: newUser.password,
+          provider: newUser.provider,
         })
         .select('*')
         .single();
