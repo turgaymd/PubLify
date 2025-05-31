@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
@@ -20,6 +21,7 @@ import { SignupDTO } from '../user/dto/createUser.dto';
 import { generate_confirm_code } from './utils/generate-codes';
 import { ConfirmAccountDTO } from './dto/confirm-account-dto';
 import { signup_confirm_message } from './utils/messages/signup-confirm';
+import { LoginDTO } from './dto/login-dto';
 
 @Injectable()
 export class AuthService {
@@ -137,7 +139,7 @@ export class AuthService {
         payload,
         this.configService.get<string>('JWT_ACCESS_SECRET_KEY')!,
         {
-          expiresIn: '5d',
+          expiresIn: '7d',
         },
       );
 
@@ -161,6 +163,72 @@ export class AuthService {
       this.logger.error(`Unknown error (confirmAccount): ${err}`);
       throw new InternalServerErrorException(
         'Internal server error when creating user.',
+      );
+    }
+  }
+
+  // Login
+  async login(loginDto: LoginDTO): Promise<{ statusCode: number; accessToken: string }> {
+    const { username_or_email, password } = loginDto;
+
+    try {
+      const isUserExist =
+        (await this.userService.getUserByEmail(username_or_email)) ||
+        (await this.userService.getUserByUsername(username_or_email));
+
+      if (!isUserExist) {
+        throw new NotFoundException({
+          statusCode: 404,
+        });
+      }
+
+      const isPasswordMatch = await bcrypt.compare(
+        password,
+        isUserExist.password,
+      );
+
+      if (!isPasswordMatch) {
+        throw new NotFoundException({
+          statusCode: 404,
+        });
+      }
+
+      if (isUserExist.is_banned) {
+        throw new NotFoundException({
+          statusCode: 401,
+          error: 'Your account has been banned.',
+        });
+      }
+
+      const payload: JwtPayload = {
+        id: isUserExist.id,
+        is_banned: isUserExist.is_banned,
+        username: isUserExist.username,
+      };
+
+      const accessToken = jwt.sign(
+        payload,
+        this.configService.get<string>('JWT_ACCESS_SECRET_KEY')!,
+        {
+          expiresIn: '7d',
+        },
+      );
+
+      return {
+        statusCode: 200,
+        accessToken,
+      };
+    } catch (err) {
+      if (
+        err instanceof ConflictException ||
+        err instanceof InternalServerErrorException || 
+        err instanceof NotFoundException
+      ) {
+        throw err;
+      }
+      this.logger.error(`Unknown error (login): ${err}`);
+      throw new InternalServerErrorException(
+        'Internal server error when logging in.',
       );
     }
   }

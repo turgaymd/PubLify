@@ -1,7 +1,12 @@
 import { Body, Controller, Post, Session } from '@nestjs/common';
+
+// Services
 import { AuthService } from './auth.service';
-import { SignupDTO } from 'src/user/dto/createUser.dto';
+
+// DTOs
+import { SignupDTO } from '../user/dto/createUser.dto';
 import { ConfirmAccountDTO } from './dto/confirm-account-dto';
+import { LoginDTO } from './dto/login-dto';
 
 @Controller('auth')
 export class AuthController {
@@ -21,5 +26,10 @@ export class AuthController {
     @Session() session: Record<string, any>,
   ) {
     return await this.authService.confirmAccount(confirmDTO, session);
+  }
+
+  @Post('login')
+  async login(@Body() loginDto: LoginDTO) {
+    return await this.authService.login(loginDto);
   }
 }
