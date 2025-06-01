@@ -48,9 +48,9 @@ body {
 }
 .left-side{
   background-image: url('/auth_bg.png');
-  width: 200px;
   mix-blend-mode: luminosity;
   background-size: cover;
+  min-height: 100vh;
 }
 .card{
   /* max-width: 30rem; */

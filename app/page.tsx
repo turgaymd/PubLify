@@ -8,7 +8,7 @@ export default function Home() {
   const [hide,setHide]=useState(true)
   return (
     <div className="container ">
-      <div className="auth flex flex-row">
+      <div className="auth flex  sm:flex-row flex-col">
         <div className="left-side  w-full flex-1">
           <Link href="/" className="logo">
             <h2 className="font-bold text-3xl pl-5">PubLify</h2>
