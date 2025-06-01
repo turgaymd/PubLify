@@ -18,9 +18,56 @@
     --foreground: #ededed;
   }
 }
+*{
+  margin:0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.log{
+ background: #06175A;
+}
 
+.switch button{
+  border-radius: 5px;
+  padding:10px 55px
+}
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+.logo{
+  color: #06175A;
+  padding-left: 2rem;
+  margin-left: 2rem;
+}
+.left-side{
+  background-image: url('/auth_bg.png');
+  width: 200px;
+  background-size: cover;
+}
+.card{
+  max-width: 30rem;
+  margin-top: 3.5rem;
+}
+.card .submit-btn{
+  background: #06175A;
+  margin-top: 2.5rem;
+}
+.card-header{
+  border-radius:10px 10px 0px 0px;
+}
+.card-body label{
+  font-weight: 500;
+  padding-bottom: 6px;
+  background: white;
+}
+.card-body{
+  padding: 25px 60px;
+}
+.card-body input{
+  padding-left: 1rem;
+}
+.card-header{
+  background: #06175A;
 }
