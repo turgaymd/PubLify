@@ -23,13 +23,18 @@
   padding: 0;
   box-sizing: border-box;
 } */
-.log{
+/* .log{
  background: #06175A;
-}
+} */
 
 .switch button{
   border-radius: 5px;
+  cursor: pointer;
   padding:10px 55px;
+}
+.switched-btn{
+  background: #06175A;
+
 }
 body {
   background: var(--background);
@@ -48,12 +53,13 @@ body {
   background-size: cover;
 }
 .card{
-  max-width: 30rem;
+  /* max-width: 30rem; */
   margin-top: 3.5rem;
 }
 .card .submit-btn{
   background: #06175A;
-  margin-top: 2.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
 }
 .card-header{
   border-radius:10px 10px 0px 0px;
@@ -74,6 +80,10 @@ body {
 }
 .card-body input{
   padding-left: 2.5rem;
+  outline: none;
+}
+.terms input{
+accent-color: #06175A !important;
 }
 .card-header{
   background: #06175A;
