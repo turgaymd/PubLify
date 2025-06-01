@@ -5,12 +5,12 @@
   --foreground: #171717;
 }
 
-@theme inline {
+/* @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
+} */
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -18,18 +18,18 @@
     --foreground: #ededed;
   }
 }
-*{
+/* *{
   margin:0;
   padding: 0;
   box-sizing: border-box;
-}
+} */
 .log{
  background: #06175A;
 }
 
 .switch button{
   border-radius: 5px;
-  padding:10px 55px
+  padding:10px 55px;
 }
 body {
   background: var(--background);
@@ -44,6 +44,7 @@ body {
 .left-side{
   background-image: url('/auth_bg.png');
   width: 200px;
+  mix-blend-mode: luminosity;
   background-size: cover;
 }
 .card{
@@ -65,8 +66,14 @@ body {
 .card-body{
   padding: 20px 60px;
 }
-.card-body input{
+.card-body i{
+  top:12px;
+  color: grey;
+  font-size: 20px;
   padding-left: 1rem;
+}
+.card-body input{
+  padding-left: 2.5rem;
 }
 .card-header{
   background: #06175A;
