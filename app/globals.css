@@ -23,10 +23,9 @@
   padding: 0;
   box-sizing: border-box;
 } */
-/* .log{
- background: #06175A;
-} */
-
+.logo h2{
+  padding-left: 3rem;
+}
 .switch button{
   border-radius: 5px;
   cursor: pointer;
@@ -54,7 +53,7 @@ body {
 }
 .card{
   /* max-width: 30rem; */
-  margin-top: 3.5rem;
+  /* margin-top: 3.5rem; */
 }
 .card .submit-btn{
   background: #06175A;
@@ -88,3 +87,7 @@ accent-color: #06175A !important;
 .card-header{
   background: #06175A;
 }
+.social li i{
+  font-size: 22px;
+}
+
