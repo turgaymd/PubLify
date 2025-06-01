@@ -6,16 +6,16 @@ export default function Home() {
     <div className="auth flex flex-row">
       <div className="left-side  w-full flex-1">
         <Link href="/" className="logo">
-        <h2 className="font-bold text-3xl">PubLify</h2>
+        <h2 className="font-bold text-3xl pl-5">PubLify</h2>
         </Link>
       </div>
-      <div className="right-side w-full flex-1">
- <div className="switch flex justify-center mb-4 ">
+      <div className="right-side w-full flex-1 flex flex-col items-center justify-center">
+ <div className="switch flex justify-center mt-4">
       <button className="log text-white font-bold">Login</button>
       <button className="sign rounded-2xl font-bold border border-gray-200">Sign Up</button>
     </div>
       <form>
-        <div className="card flex flex-col  gap-3 rounded-2xl shadow-lg">
+        <div className="card flex flex-col gap-3 rounded-2xl shadow-lg">
           <div className="card-header px-2 py-5 text-white">
             <h2 className="text-xl font-bold text-center">Sign Up</h2>
           </div>
@@ -28,7 +28,7 @@ export default function Home() {
               <label>Username</label> 
               <input type="text" className="px-2 py-2  border border-gray-300 rounded-lg" placeholder="B.01.631.18.022"/>
             </div>
-            <div className="mb-3 pb-3 flex flex-col">
+            <div className="mb-3 flex flex-col">
               <label htmlFor="email" >Email</label> 
               <input type="email" className="px-2 py-2 w-full border border-gray-300 rounded-lg" placeholder="publify@gmail.com"/>
             </div>
