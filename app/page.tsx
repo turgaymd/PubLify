@@ -21,7 +21,6 @@ export default function Home() {
               Sign Up
             </button>
           </div>
-          <form>
                {
             isLogin ? <></> : (
               <>
@@ -29,7 +28,6 @@ export default function Home() {
               </>
             )
           }
-          </form>
           <div className="social flex gap-3 mt-4">
             <ul className="flex gap-7">
               <li className="">
