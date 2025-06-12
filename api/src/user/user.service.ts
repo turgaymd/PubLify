@@ -19,6 +19,7 @@ export class UserService {
 
   constructor(private readonly supabase: SupabaseService) {}
 
+  // Get User
   async getUserByUsername(username: string): Promise<IUser> {
     try {
       const { data, error } = await this.supabase
@@ -67,12 +68,10 @@ export class UserService {
           'Something went wrong when getting user.',
         );
       }
+
       return data;
     } catch (err) {
-      if (
-        err instanceof NotFoundException ||
-        err instanceof InternalServerErrorException
-      ) {
+      if (err instanceof InternalServerErrorException) {
         throw err;
       }
       this.logger.error(`Unknown error (getUserByEmail): ${err}`);
@@ -82,6 +81,35 @@ export class UserService {
     }
   }
 
+  async getUserByResetToken(resetToken: string): Promise<IUser> {
+    try {
+      const { data, error } = await this.supabase
+        .getClient()
+        .from('users')
+        .select('*')
+        .eq('resetToken', resetToken)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        this.logger.error(`Supabase error (getUserByEmail): ${error.message}`);
+        throw new InternalServerErrorException(
+          'Something went wrong when getting user.',
+        );
+      }
+
+      return data;
+    } catch (err) {
+      if (err instanceof InternalServerErrorException) {
+        throw err;
+      }
+      this.logger.error(`Unknown error (getUserByToken): ${err}`);
+      throw new InternalServerErrorException(
+        'Internal server error when getting user.',
+      );
+    }
+  }
+
+  // Create New User
   async createUser(newUser: INewUser): Promise<IUser> {
     try {
       const { data: insertedUser, error: insertError } = await this.supabase
@@ -122,6 +150,44 @@ export class UserService {
       throw new InternalServerErrorException(
         'Internal server error when creating user.',
       );
+    }
+  }
+
+  // Update User Informations
+  async updateResetToken(
+    email: string,
+    resetToken: string | null,
+    resetTokenExpiration: Date | null,
+  ): Promise<void> {
+    try {
+      await this.supabase
+        .getClient()
+        .from('users')
+        .update({
+          resetToken,
+          resetTokenExpiration,
+        })
+        .eq('email', email)
+        .single();
+    } catch (error) {
+      throw new InternalServerErrorException({
+        statusCode: 500,
+      });
+    }
+  }
+
+  async updatePassword(id: string, newPassword: string): Promise<void> {
+    try {
+      await this.supabase
+        .getClient()
+        .from('users')
+        .update({ password: newPassword })
+        .eq('id', id)
+        .single();
+    } catch (error) {
+      throw new InternalServerErrorException({
+        statusCode: 500,
+      });
     }
   }
 }

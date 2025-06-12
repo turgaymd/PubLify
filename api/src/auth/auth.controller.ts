@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   Req,
   Res,
   Session,
@@ -20,6 +21,10 @@ import { LoginDTO } from './dto/login-dto';
 
 // Guards
 import { JwtAuthGuard } from '../jwt/jwt-auth-guard';
+import {
+  ForgotPasswordDTO,
+  SetNewPasswordDTO,
+} from './dto/forgot-password-dto';
 
 @Controller('auth')
 export class AuthController {
@@ -97,5 +102,26 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   async logout(@Req() req: any, @Session() session: Record<string, any>) {
     return await this.authService.logout(req, session);
+  }
+
+  // Forgot Password
+  @Post('forgot-password')
+  async forgotPassword(@Body() forgotPassword: ForgotPasswordDTO) {
+    return await this.authService.forgotPassword(forgotPassword);
+  }
+
+  // Check is reset token valid
+  @Get('check')
+  async isResetTokenValid(@Query('resetToken') resetToken: string) {
+    return await this.authService.isResetTokenValid(resetToken);
+  }
+
+  // Reset Password
+  @Post('reset-password')
+  async resetPassword(
+    @Body() newPasswordDto: SetNewPasswordDTO,
+    @Query('resetToken') resetToken: string,
+  ) {
+    return await this.authService.resetPassword(newPasswordDto, resetToken);
   }
 }

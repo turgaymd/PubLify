@@ -6,11 +6,11 @@ export const forgotPasswordMessage = (reset_token: string) => {
             <h2 style="text-align: center; color: #2e3ecc;">Password Reset Request</h2>
             <p>We received a request to reset your password. If you made this request, please click the button below to reset your password:</p>
             <div style="text-align: center; margin: 20px 0;">
-              <a href="https://connectify-io.netlify.app/auth/reset-password?token=${reset_token}" 
+              <a href="http://localhost:3535/auth/reset-password?resetToken=${reset_token}" 
                  style="display: inline-block; font-size: 18px; font-weight: bold; color: #ffffff; background-color: #2e3ecc; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Reset My Password</a>
             </div>
             <p>If the button above does not work, please copy and paste the following URL into your browser:</p>
-            <a href="https://connectify-io.netlify.app/auth/reset-password?token=${reset_token}" style="word-wrap: break-word; color: #2e3ecc;">https://connectify-io.netlify.app/auth/reset-password?token=${reset_token}</a>
+            <a href="http://localhost:3535/auth/reset-password?resetToken=${reset_token}" style="word-wrap: break-word; color: #2e3ecc;">http://localhost:3535/auth/reset-password?resetToken=${reset_token}</a>
             <p style="color: #777; font-size: 14px;">This link will expire in <strong>1 hours</strong>. If you did not request this, you can safely ignore this email.</p>
             <p>If you have any questions or need help, feel free to contact our support team at <a href="mailto:publify.team@gmail.com" style="color: #2e3ecc; text-decoration: none;">publify.team@gmail.com</a>.</p>
             <p>Thank you,</p>
@@ -36,7 +36,7 @@ export const emailNotFoundMessage = (email: string) => {
             </div>
             <p>If you have any questions or need help, feel free to contact our support team at <a href="mailto:publify.team@gmail.com" style="color: #2e3ecc; text-decoration: none;">publify.team@gmail.com</a>.</p>
             <p>Thank you,</p>
-            <p style="text-align: center; font-weight: bold;">Publify Team</p>
+            <p style="text-align: center; font-weight: bold; color: #2e3ecc;">Publify Team</p>
           </div>
         </body>
       </html>
@@ -59,7 +59,7 @@ export const googleSignInMessage = (email: string) => {
             <p>If you did not try to reset your password and believe this is a mistake, you can ignore this email.</p>
             <p>If you have any questions or need help, feel free to contact our support team at <a href="mailto:publify.team@gmail.com" style="color: #2e3ecc; text-decoration: none;">publify.team@gmail.com</a>.</p>
             <p>Thank you,</p>
-            <p style="text-align: center; font-weight: bold;">Publify Team</p>
+            <p style="text-align: center; font-weight: bold; color: #2e3ecc;">Publify Team</p>
           </div>
         </body>
       </html>
