@@ -9,6 +9,8 @@ export interface IUser {
   is_admin: boolean;
   provider: Provider;
   password: string;
+  resetToken: string;
+  resetTokenExpiration: Date;
   created_at: Date;
 }
 
